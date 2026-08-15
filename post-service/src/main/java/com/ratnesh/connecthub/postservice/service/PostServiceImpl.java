@@ -59,9 +59,7 @@ public class PostServiceImpl implements PostService {
         List<Post> posts =
                 postRepository.findAllByOrderByCreatedAtDesc();
 
-        return posts.stream()
-                .map(postMapper::toDto)
-                .toList();
+        return postMapper.toListOfPostDto(posts);
     }
 
     public PostDto getPostById(Long postId) {
