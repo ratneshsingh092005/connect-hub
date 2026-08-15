@@ -26,7 +26,35 @@ public class PostController {
         PostDto postDto = postService.createPost(postCreateRequestDto);
         return  ResponseEntity.status(HttpStatus.CREATED).body(postDto);
     }
+    @PutMapping("/{postId}")
+    public ResponseEntity<PostDto> updatePost(
+            @PathVariable Long postId,
+            @RequestBody PostCreateRequestDto request) {
 
+        return ResponseEntity.ok(
+                postService.updatePost(postId, request)
+        );
+    }
+    @GetMapping("/feed")
+    public ResponseEntity<List<PostDto>> getFeed() {
+        return ResponseEntity.ok(postService.getFeed());
+    }
 
+    @GetMapping("/{postId}")
+    public ResponseEntity<PostDto> getPost(@PathVariable Long postId) {
+        PostDto postDto = postService.getPostById(postId);
+        return ResponseEntity.ok(postDto);
+    }
+
+    @GetMapping("/users/{userId}/allPosts")
+    public ResponseEntity<List<PostDto>> getAllPostsOfUser(@PathVariable Long userId) {
+        List<PostDto> posts = postService.getAllPostsOfUser(userId);
+        return ResponseEntity.ok(posts);
+    }
+    @DeleteMapping("/{postId}")
+    public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
+        postService.deletePost(postId);
+        return ResponseEntity.noContent().build();
+    }
 
 }
