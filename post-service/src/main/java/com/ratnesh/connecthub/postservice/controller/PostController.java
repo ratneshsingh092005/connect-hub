@@ -27,6 +27,6 @@ public class PostController {
         return  ResponseEntity.status(HttpStatus.CREATED).body(postDto);
     }
 
-    
+
 
 }

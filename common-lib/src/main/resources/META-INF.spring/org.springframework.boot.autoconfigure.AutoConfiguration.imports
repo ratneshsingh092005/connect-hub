@@ -1,0 +1,2 @@
+com.ratnesh.connecthub.commonlib.security.SecurityAutoConfiguration
+com.ratnesh.connecthub.commonlib.error.ExceptionAutoConfiguration
