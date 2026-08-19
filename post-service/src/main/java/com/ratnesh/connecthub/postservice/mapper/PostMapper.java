@@ -14,5 +14,4 @@ public interface PostMapper {
 
     List<PostDto> toListOfPostDto(List<Post> posts);
 
-    void updatePostFromDto(PostCreateRequestDto request, Post post);
 }

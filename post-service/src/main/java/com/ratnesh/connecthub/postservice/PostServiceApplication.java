@@ -3,7 +3,7 @@ package com.ratnesh.connecthub.postservice;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "com.ratnesh.connecthub")
 public class PostServiceApplication {
 
 	public static void main(String[] args) {

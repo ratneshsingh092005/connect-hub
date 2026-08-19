@@ -48,7 +48,7 @@ public class PostServiceImpl implements PostService {
             );
         }
 
-        postMapper.updatePostFromDto(request, post);
+        post.setContent(request.content());
 
         Post updatedPost = postRepository.save(post);
 
