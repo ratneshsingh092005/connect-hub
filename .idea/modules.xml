@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/connect-hub.iml" filepath="$PROJECT_DIR$/.idea/connect-hub.iml" />
+      <module fileurl="file://$PROJECT_DIR$/connection-service/connection-service.iml" filepath="$PROJECT_DIR$/connection-service/connection-service.iml" />
     </modules>
   </component>
 </project>

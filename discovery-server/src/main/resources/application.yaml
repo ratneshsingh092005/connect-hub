@@ -2,8 +2,7 @@ spring:
   application:
     name: discovery-server
 
-server:
-  port: 9040
+
 
 eureka:
   client:
@@ -13,3 +12,6 @@ eureka:
 
 
 jwt.secretKey: 9d3f6c8a1b2e4f5g7h8j9k0lmnopqrstuv
+
+server:
+  port: 8761
