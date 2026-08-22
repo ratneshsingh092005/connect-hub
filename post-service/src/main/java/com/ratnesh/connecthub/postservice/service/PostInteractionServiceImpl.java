@@ -7,12 +7,17 @@ import com.ratnesh.connecthub.postservice.entity.Post;
 import com.ratnesh.connecthub.postservice.entity.PostLike;
 import com.ratnesh.connecthub.postservice.entity.PostSave;
 import com.ratnesh.connecthub.postservice.entity.PostRepost;
+import com.ratnesh.connecthub.commonlib.event.PostLikedEvent;
+import com.ratnesh.connecthub.commonlib.event.PostRepostedEvent;
 import com.ratnesh.connecthub.postservice.repository.PostLikeRepository;
 import com.ratnesh.connecthub.postservice.repository.PostRepository;
 import com.ratnesh.connecthub.postservice.repository.PostSaveRepository;
 import com.ratnesh.connecthub.postservice.repository.PostRepostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +28,7 @@ public class PostInteractionServiceImpl implements PostInteractionService{
     private final PostLikeRepository postLikeRepository;
     private final PostSaveRepository postSaveRepository;
     private final PostRepostRepository postRepostRepository;
+    private final KafkaTemplate<Long, Object> kafkaTemplate;
 
     @Override
     public void likePost(Long postId) {
@@ -37,7 +43,15 @@ public class PostInteractionServiceImpl implements PostInteractionService{
                 .userId(userId)
                 .build();
 
+        PostLikedEvent postLikedEvent = PostLikedEvent.builder()
+                .postId(postId)
+                .postOwnerId(post.getUserId())
+                .likedByUserId(userId)
+                .createdAt(Instant.now())
+                .build();
         postLikeRepository.save(postLike);
+
+        kafkaTemplate.send("post-liked",postLikedEvent);
 
     }
 
@@ -58,7 +72,7 @@ public class PostInteractionServiceImpl implements PostInteractionService{
     public void repostPost(Long postId) {
         Long userId = authUtil.getCurrentUserId();
 
-        postRepository.findById(postId)
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("post", postId.toString()));
 
@@ -74,7 +88,16 @@ public class PostInteractionServiceImpl implements PostInteractionService{
                 .userId(userId)
                 .build();
 
+
+        PostRepostedEvent postRepostedEvent = PostRepostedEvent.builder()
+                .postId(postId)
+                .postOwnerId(post.getUserId())
+                .repostedByUserId(userId)
+                .createdAt(Instant.now())
+                .build();
         postRepostRepository.save(postRepost);
+
+        kafkaTemplate.send("post-reposted",postRepostedEvent);
     }
 
     @Override

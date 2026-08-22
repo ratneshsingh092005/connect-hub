@@ -1,6 +1,7 @@
 package com.ratnesh.connecthub.user_service.Service;
 
 import com.ratnesh.connecthub.commonlib.error.BadRequestException;
+import com.ratnesh.connecthub.commonlib.event.UserCreatedEvent;
 import com.ratnesh.connecthub.commonlib.security.AuthUtil;
 import com.ratnesh.connecthub.commonlib.security.JwtUserPrincipal;
 import com.ratnesh.connecthub.user_service.dto.AuthResponse;
@@ -11,6 +12,7 @@ import com.ratnesh.connecthub.user_service.entity.User;
 import com.ratnesh.connecthub.user_service.mapper.UserMapper;
 import com.ratnesh.connecthub.user_service.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,6 +30,9 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final AuthUtil authUtil;
+    private final KafkaTemplate<Long,UserCreatedEvent> userCreatedKafkaTemplate;
+
+
     @Override
     public AuthResponse signup(SignupRequest request) {
         userRepository.findByEmail(request.email()).ifPresent(user -> {
@@ -40,9 +45,20 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         user = userRepository.save(user);
+
+        UserCreatedEvent userCreatedEvent = UserCreatedEvent.builder()
+                .userId(user.getId())
+                .name(user.getName())
+                .build();
+
+        userCreatedKafkaTemplate.send("user-created",userCreatedEvent);
+
+
         JwtUserPrincipal jwtUserPrincipal = new JwtUserPrincipal(user.getId(),user.getName(),user.getEmail(),null);
 
         String accessToken = authUtil.generateAccessToken(jwtUserPrincipal);
+
+
         return new AuthResponse(accessToken,userMapper.toUserProfileResponse(jwtUserPrincipal));
 
     }

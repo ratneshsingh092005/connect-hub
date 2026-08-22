@@ -3,11 +3,14 @@ package com.ratnesh.connecthub.connectionservice.service;
 
 import com.ratnesh.connecthub.commonlib.error.BadRequestException;
 import com.ratnesh.connecthub.commonlib.error.ResourceNotFoundException;
+import com.ratnesh.connecthub.commonlib.event.ConnectionRequestAcceptedEvent;
+import com.ratnesh.connecthub.commonlib.event.ConnectionRequestSentEvent;
 import com.ratnesh.connecthub.commonlib.security.AuthUtil;
 import com.ratnesh.connecthub.connectionservice.dto.PersonDto;
 import com.ratnesh.connecthub.connectionservice.mapper.PersonMapper;
 import com.ratnesh.connecthub.connectionservice.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +22,7 @@ public class ConnectionServiceImpl implements ConnectionService {
     private final PersonRepository personRepository;
     private final PersonMapper personMapper;
     private final AuthUtil authUtil;
+    private final KafkaTemplate<Long,Object> kafkaTemplate;
 
     public List<PersonDto> getFirstDegreeConnections(Long userId) {
         return personMapper.toPersonDtoList(
@@ -87,8 +91,15 @@ public class ConnectionServiceImpl implements ConnectionService {
             throw new BadRequestException("A connection request already exists between these users.");
         }
 
+
         personRepository.sendConnectionRequest(senderUserId, receiverUserId);
 
+        ConnectionRequestSentEvent requestSentEvent = ConnectionRequestSentEvent.builder()
+                .senderUserId(senderUserId)
+                .receiverUserId(receiverUserId)
+                .build();
+
+        kafkaTemplate.send("connection-request-sent",requestSentEvent);
 
     }
 
@@ -102,6 +113,12 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         personRepository.acceptConnectionRequest(senderUserId, receiverUserId);
 
+        ConnectionRequestAcceptedEvent requestAcceptedEvent = ConnectionRequestAcceptedEvent.builder()
+                .senderUserId(senderUserId)
+                .receiverUserId(receiverUserId)
+                .build();
+
+        kafkaTemplate.send("connection-request-accepted",requestAcceptedEvent);
 
     }
 
