@@ -1,8 +1,9 @@
 package com.ratnesh.connecthub.postservice.service;
 
+import com.ratnesh.connecthub.commonlib.error.BadRequestException;
 import com.ratnesh.connecthub.commonlib.error.ResourceNotFoundException;
 import com.ratnesh.connecthub.commonlib.security.AuthUtil;
-import com.ratnesh.connecthub.postservice.client.ConnectionsServiceClient;
+import com.ratnesh.connecthub.postservice.client.UploaderServiceClient;
 import com.ratnesh.connecthub.postservice.dto.PostCreateRequestDto;
 import com.ratnesh.connecthub.postservice.dto.PostDto;
 import com.ratnesh.connecthub.postservice.entity.Post;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.util.List;
@@ -24,14 +26,30 @@ public class PostServiceImpl implements PostService {
     private final PostMapper postMapper;
     private final AuthUtil authUtil;
     private final KafkaTemplate<Long,Object> kafkaTemplate;
-    private final ConnectionsServiceClient connectionsServiceClient;
+    private final UploaderServiceClient uploaderServiceClient;
 
 
-    public PostDto createPost(PostCreateRequestDto postCreateRequestDto) {
+    public PostDto createPost(PostCreateRequestDto postCreateRequestDto, List<MultipartFile> files) {
+        if ((postCreateRequestDto.content() == null || postCreateRequestDto.content().isBlank())
+                && (files == null || files.isEmpty())) {
+
+            throw new BadRequestException(
+                    "Post must contain either content or at least one image"
+            );
+        }
         Long userId = authUtil.getCurrentUserId();
+
+
+        List<String> imageUrls = List.of();
+        if (files != null && !files.isEmpty()) {
+            imageUrls = uploaderServiceClient
+                    .uploadFiles(files)
+                    .getBody();
+        }
         Post post = Post.builder()
                 .userId(userId)
                 .content(postCreateRequestDto.content())
+                .imageUrls(imageUrls)
                 .build();
         post = postRepository.save(post);
 

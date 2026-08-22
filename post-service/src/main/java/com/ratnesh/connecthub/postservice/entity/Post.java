@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -22,6 +23,8 @@ public class Post {
     Long id;
 
     String content;
+
+    List<String> imageUrls;
 
     @Column(nullable = false)
     Long userId;

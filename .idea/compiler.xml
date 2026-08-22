@@ -10,7 +10,7 @@
         <module name="APIGateway" />
         <module name="discovery-server" />
       </profile>
-      <profile name="Annotation profile for post-service" enabled="true">
+      <profile name="Annotation profile for connection-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -24,21 +24,30 @@
         <module name="user-service" />
         <module name="common-lib" />
       </profile>
-      <profile name="Annotation profile for notification-service" enabled="true">
+      <profile name="Annotation profile for api-gateway" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
+        </processorPath>
+        <module name="api-gateway" />
+        <module name="notification-service" />
+      </profile>
+      <profile name="Annotation profile for uploader-service" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.46/lombok-1.18.46.jar" />
         </processorPath>
-        <module name="api-gateway" />
-        <module name="notification-service" />
+        <module name="uploader-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="apigateway" target="17" />
       <module name="connections-service" target="17" />
-      <module name="uploader-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
