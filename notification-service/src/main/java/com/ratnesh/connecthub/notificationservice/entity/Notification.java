@@ -23,7 +23,8 @@ public class Notification {
     private Long id;
     private Long userId;
     private String message;
-
+    private Long referenceId;
+    private boolean read = false;
     @CreationTimestamp
     private Instant createdAt;
 }

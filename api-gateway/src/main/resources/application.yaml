@@ -26,6 +26,23 @@ spring:
           filters:
             - StripPrefix=2
 
+
+        - id: notification-service
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/api/v1/notifications/**
+          filters:
+            - StripPrefix=2
+
+        - id: notification-service
+          uri: lb://UPLOADER-SERVICE
+          predicates:
+            - Path=/api/v1/uploads/**
+          filters:
+            - StripPrefix=2
+
+
+
 server:
   port: 9060
 
@@ -33,6 +50,9 @@ security:
   public-routes:
     - /api/v1/users/auth/login
     - /api/v1/users/auth/signup
+    - /swagger-ui/**
+    - /swagger-ui.html
+    - /v3/api-docs/**
 
 eureka:
   client:
