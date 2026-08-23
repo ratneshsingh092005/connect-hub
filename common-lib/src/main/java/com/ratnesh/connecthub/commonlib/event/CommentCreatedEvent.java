@@ -5,11 +5,16 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConnectionRequestAcceptedEvent {
-    private Long senderUserId;
-    private Long receiverUserId;
+ public class CommentCreatedEvent {
+    private Long commentId;
+    private Long postId;
+    private Long commenterId;
+    private Long postOwnerId;
+    private Instant createdAt;
 }

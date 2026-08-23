@@ -18,7 +18,9 @@ public interface NotificationService {
 
     List<NotificationResponse> getNotifications();
 
-    NotificationResponse markAsRead(Long id);
+    void markAsRead(Long id);
 
     void markAllAsRead();
+
+    void createCommentNotification(CommentCreatedEvent event);
 }

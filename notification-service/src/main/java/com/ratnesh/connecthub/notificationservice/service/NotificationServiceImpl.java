@@ -107,22 +107,16 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public NotificationResponse markAsRead(Long id) {
+    public void markAsRead(Long id) {
         Notification notification = notificationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Notification",id.toString()));
 
         notification.setRead(true);
 
-        Notification saved = notificationRepository.save(notification);
+        notificationRepository.save(notification);
 
-        return new NotificationResponse(
-                saved.getId(),
-                saved.getUserId(),
-                saved.getReferenceId(),
-                saved.getMessage(),
-                saved.isRead(),
-                saved.getCreatedAt()
-        );
+
+
     }
 
     @Override
@@ -135,6 +129,18 @@ public class NotificationServiceImpl implements NotificationService {
         notifications.forEach(notification -> notification.setRead(true));
 
         notificationRepository.saveAll(notifications);
+    }
+
+    @Override
+    public void createCommentNotification(CommentCreatedEvent event) {
+        Notification notification = Notification.builder()
+                .userId(event.getPostOwnerId())
+                .message(event.getCommenterId() +" commented on your post")
+                .referenceId(event.getPostId())
+                .build();
+
+        notificationRepository.save(notification);;
+
     }
 
 }

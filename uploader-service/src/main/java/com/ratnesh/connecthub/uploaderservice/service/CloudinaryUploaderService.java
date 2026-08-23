@@ -40,4 +40,18 @@ public class CloudinaryUploaderService implements UploaderService {
 
         return urls;
     }
+
+    @Override
+    public String uploadImage(MultipartFile file) {
+        try {
+            Map uploadResult =
+                    cloudinary.uploader()
+                            .upload(file.getBytes(), Map.of());
+
+            return uploadResult.get("secure_url").toString();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

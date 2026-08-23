@@ -26,6 +26,7 @@ public class ConnectionSecurityConfig {
                         .requestMatchers("/actuator/health", "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/connections/core/*/first-degree").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

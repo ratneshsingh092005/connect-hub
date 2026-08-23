@@ -1,10 +1,7 @@
 package com.ratnesh.connecthub.user_service.dto;
 
-public record UserProfileResponse(
+public record UserSearchResponse(
         Long id,
-        String email,
-        String bio,
         String name,
         String profileImageUrl
-) {
-}
+) {}

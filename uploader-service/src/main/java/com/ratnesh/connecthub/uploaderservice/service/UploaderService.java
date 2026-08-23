@@ -7,4 +7,6 @@ import java.util.List;
 public interface UploaderService {
 
     List<String> upload(List<MultipartFile> files);
+
+    String uploadImage(MultipartFile file);
 }

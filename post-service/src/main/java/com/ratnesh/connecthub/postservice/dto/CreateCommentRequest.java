@@ -1,8 +1,6 @@
 package com.ratnesh.connecthub.postservice.dto;
 
-
-public record PostCreateRequestDto(
+public record CreateCommentRequest(
         String content
-
 ) {
 }

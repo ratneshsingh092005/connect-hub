@@ -6,32 +6,30 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.util.List;
 
 @Entity
-@Table(name = "posts")
+@Table(name = "comments")
 @Getter
 @Setter
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
-public class Post {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    String content;
-
-    @ElementCollection
-    List<String> imageUrls;
+    @Column(nullable = false)
+    Long postId;
 
     @Column(nullable = false)
     Long userId;
 
+    @Column(nullable = false)
+    String content;
+
     @CreationTimestamp
     Instant createdAt;
-
-
 }

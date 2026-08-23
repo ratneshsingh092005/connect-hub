@@ -2,44 +2,46 @@ spring:
   application:
     name: api-gateway
 
+
   cloud:
     gateway:
-      routes:
-        - id: user-service
-          uri: lb://USER-SERVICE
-          predicates:
-            - Path=/api/v1/users/**
-          filters:
-            - StripPrefix=2
+      server:
+        webflux:
+          routes:
+            - id: user-service
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/api/v1/users/**
+              filters:
+                - StripPrefix=2
 
-        - id: post-service
-          uri: lb://POST-SERVICE
-          predicates:
-            - Path=/api/v1/posts/**
-          filters:
-            - StripPrefix=2
-            -
-        - id: connection-service
-          uri: lb://CONNECTION-SERVICE
-          predicates:
-            - Path=/api/v1/connections/**
-          filters:
-            - StripPrefix=2
+            - id: post-service
+              uri: lb://POST-SERVICE
+              predicates:
+                - Path=/api/v1/posts/**
+              filters:
+                - StripPrefix=2
 
+            - id: connection-service
+              uri: lb://CONNECTION-SERVICE
+              predicates:
+                - Path=/api/v1/connections/**
+              filters:
+                - StripPrefix=2
 
-        - id: notification-service
-          uri: lb://NOTIFICATION-SERVICE
-          predicates:
-            - Path=/api/v1/notifications/**
-          filters:
-            - StripPrefix=2
+            - id: notification-service
+              uri: lb://NOTIFICATION-SERVICE
+              predicates:
+                - Path=/api/v1/notifications, /api/v1/notifications/**
+              filters:
+                - StripPrefix=2
 
-        - id: notification-service
-          uri: lb://UPLOADER-SERVICE
-          predicates:
-            - Path=/api/v1/uploads/**
-          filters:
-            - StripPrefix=2
+            - id: uploader-service
+              uri: lb://UPLOADER-SERVICE
+              predicates:
+                - Path=/api/v1/uploads/**
+              filters:
+                - StripPrefix=2
 
 
 
@@ -61,3 +63,12 @@ eureka:
 
 
 jwt.secretKey: 9d3f6c8a1b2e4f5g7h8j9k0lmnopqrstuv
+
+management:
+  endpoint:
+    gateway:
+      access: read-only
+  endpoints:
+    web:
+      exposure:
+        include: gateway

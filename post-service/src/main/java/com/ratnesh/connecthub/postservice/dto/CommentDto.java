@@ -1,14 +1,13 @@
 package com.ratnesh.connecthub.postservice.dto;
 
-import java.time.Instant;
-import java.util.List;
 
-public record PostDto(
+import java.time.Instant;
+
+public record CommentDto(
         Long id,
-        String content,
-        List<String> imageUrls,
+        Long postId,
         Long userId,
+        String content,
         Instant createdAt
 ) {
-
 }

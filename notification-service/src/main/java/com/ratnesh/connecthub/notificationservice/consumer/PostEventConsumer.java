@@ -1,5 +1,6 @@
 package com.ratnesh.connecthub.notificationservice.consumer;
 
+import com.ratnesh.connecthub.commonlib.event.CommentCreatedEvent;
 import com.ratnesh.connecthub.commonlib.event.PostCreatedEvent;
 import com.ratnesh.connecthub.commonlib.event.PostLikedEvent;
 import com.ratnesh.connecthub.commonlib.event.PostRepostedEvent;
@@ -29,5 +30,10 @@ public class PostEventConsumer {
     @KafkaListener(topics = "post-reposted", groupId = "notification-service")
     public void consumePostReposted(PostRepostedEvent event) {
         notificationService.handlePostReposted(event);
+    }
+
+    @KafkaListener(topics = "comment-created", groupId = "notification-service")
+    public void handleCommentCreated(CommentCreatedEvent event) {
+        notificationService.createCommentNotification(event);
     }
 }
