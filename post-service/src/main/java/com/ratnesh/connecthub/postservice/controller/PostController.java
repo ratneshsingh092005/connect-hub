@@ -1,7 +1,6 @@
 package com.ratnesh.connecthub.postservice.controller;
 
-import com.ratnesh.connecthub.postservice.dto.PostCreateRequestDto;
-import com.ratnesh.connecthub.postservice.dto.PostDto;
+import com.ratnesh.connecthub.postservice.dto.*;
 import com.ratnesh.connecthub.postservice.service.PostService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +57,30 @@ public class PostController {
     public ResponseEntity<Void> deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
         return ResponseEntity.noContent().build();
+    }
+
+
+    @PostMapping("/{postId}/improve")
+    public ImprovePostResponse improvePost(
+            @PathVariable Long postId
+    ) {
+        return postService.improvePost(postId);
+    }
+
+
+    @PostMapping("/generate")
+    public GeneratePostResponse generatePost(
+            @RequestBody GeneratePostRequest request
+    ) {
+        return postService.generatePost(request);
+    }
+
+
+    @PostMapping("/{postId}/comments/summarize")
+    public CommentSummaryResponse summarizeComments(
+            @PathVariable Long postId
+    ) {
+        return postService.summarizeComments(postId);
     }
 
 }

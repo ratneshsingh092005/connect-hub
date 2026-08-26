@@ -1,8 +1,7 @@
 package com.ratnesh.connecthub.postservice.service;
 
 
-import com.ratnesh.connecthub.postservice.dto.PostCreateRequestDto;
-import com.ratnesh.connecthub.postservice.dto.PostDto;
+import com.ratnesh.connecthub.postservice.dto.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -19,4 +18,10 @@ public interface PostService {
     PostDto updatePost(Long postId, PostCreateRequestDto request);
 
     List<PostDto> getFeed();
+
+    ImprovePostResponse improvePost(Long postId);
+
+    CommentSummaryResponse summarizeComments(Long postId);
+
+    GeneratePostResponse generatePost(GeneratePostRequest request);
 }
