@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: uploader-service
+
+server:
+  servlet:
+    context-path: /uploads
+  port: 9090
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka/
+
+cloudinary:
+  cloud-name: ${CLOUDINARY_CLOUD_NAME}
+  api-key: ${CLOUDINARY_API_KEY}
+  api-secret: ${CLOUDINARY_API_SECRET}
+
+jwt:
+  secretKey: ${JWT_SECRET}

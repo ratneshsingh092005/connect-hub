@@ -1,0 +1,71 @@
+spring:
+  application:
+    name: api-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: user-service
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/api/v1/users/**
+              filters:
+                - StripPrefix=2
+
+            - id: post-service
+              uri: lb://POST-SERVICE
+              predicates:
+                - Path=/api/v1/posts/**
+              filters:
+                - StripPrefix=2
+
+            - id: connection-service
+              uri: lb://CONNECTION-SERVICE
+              predicates:
+                - Path=/api/v1/connections/**
+              filters:
+                - StripPrefix=2
+
+            - id: notification-service
+              uri: lb://NOTIFICATION-SERVICE
+              predicates:
+                - Path=/api/v1/notifications, /api/v1/notifications/**
+              filters:
+                - StripPrefix=2
+
+            - id: uploader-service
+              uri: lb://UPLOADER-SERVICE
+              predicates:
+                - Path=/api/v1/uploads/**
+              filters:
+                - StripPrefix=2
+
+server:
+  port: 9060
+
+security:
+  public-routes:
+    - /api/v1/users/auth/login
+    - /api/v1/users/auth/signup
+    - /swagger-ui/**
+    - /swagger-ui.html
+    - /v3/api-docs/**
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka/
+
+jwt:
+  secretKey: ${JWT_SECRET}
+
+management:
+  endpoint:
+    gateway:
+      access: read-only
+  endpoints:
+    web:
+      exposure:
+        include: gateway
